@@ -329,7 +329,10 @@ def windows_uwp_x64():
         .with_features("taskclusterProxy")
         .with_scopes("secrets:get:project/servo/windows-codesign-cert/latest")
         .with_script(
-            "powershell ./etc/uwp.ps1",
+            "python mach package-pre-check",
+            "python mach build --dev --target=x86_64-uwp-windows-msvc",
+            "python mach package --dev --target=x86_64-uwp-windows-msvc --uwp=x64",
+            "python ./etc/test_uwp.py",
         )
         .with_artifacts(appx_artifact(debug=True))
         .find_or_create("build.windows_uwp_x64_dev." + CONFIG.tree_hash())
